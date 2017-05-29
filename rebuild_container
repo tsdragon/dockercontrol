@@ -36,7 +36,6 @@ while getopts "n:xrish" opt; do
       x)  STOP_CONTAINER=true;;
       r)  RM_CONTAINER=true;;
       i)  RM_CONTAINER_IMAGE=true
-          IMAGE=$(docker ps -af "name=helloworld" | awk 'NR>1 {print $2}');; #Get container image id
       s)  RESTART_CONTAINER=true;;
       h)  print_help;;
       *)  print_help;;
@@ -44,11 +43,14 @@ while getopts "n:xrish" opt; do
     esac
 done
 
-if [ ! "$CONTAINER_NAME" ]
-then
-    echo "No container name set, container name must be set with -n <container name>"
-    echo
-    print_help
+if [ ! "$CONTAINER_NAME" ] ; then
+  echo "No container name set, container name must be set with -n <container name>"
+  echo
+  print_help
+fi
+
+if [ "$RM_CONTAINER_IMAGE" = true ] ; then
+  IMAGE=$(docker ps -af "name=$CONTAINER_NAME" | awk 'NR>1 {print $2}');; #Get container image id
 fi
 
 # Stop container
