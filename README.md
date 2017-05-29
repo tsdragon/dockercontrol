@@ -12,11 +12,11 @@ It will also restart the containers once they're rebuilt automatically, inless y
 
 Usage: rebuild_all [option...] -c containername -c containername... -e containername -e containername... 
 
-&nbsp;&nbsp;-a,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rebuild all containers (ignores -c options)
-&nbsp;&nbsp;-n,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nuke, completely wipe ALL containers (USE EXTREME CAUTION), assumes -a
-&nbsp;&nbsp;-d,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Don't restart the containers
-&nbsp;&nbsp;-c name,&nbsp;&nbsp;When -a not specified, give list of containers to rebuild
-&nbsp;&nbsp;-e name,&nbsp;&nbsp;Don't restart this container like the others
+&nbsp;&nbsp;-a,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rebuild all containers (ignores -c options)<br>
+&nbsp;&nbsp;-n,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nuke, completely wipe ALL containers (USE EXTREME CAUTION), assumes -a<br>
+&nbsp;&nbsp;-d,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Don't restart the containers<br>
+&nbsp;&nbsp;-c name,&nbsp;&nbsp;When -a not specified, give list of containers to rebuild<br>
+&nbsp;&nbsp;-e name,&nbsp;&nbsp;Don't restart this container like the others<br>
 
 
 # rebuild_container
@@ -27,8 +27,8 @@ You can specify options to stop, remove, and rmi the container and image before 
 
 Usage: rebuild_container [option...] -n containername
 
-&nbsp;&nbsp;-n name,&nbsp;&nbsp;Specify container name (required)
-&nbsp;&nbsp;-x,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stop the container
-&nbsp;&nbsp;-r,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remove the container
-&nbsp;&nbsp;-i,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remove the container image
-&nbsp;&nbsp;-s,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Restart the container after execution
+&nbsp;&nbsp;-n name,&nbsp;&nbsp;Specify container name (required)<br>
+&nbsp;&nbsp;-x,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Stop the container<br>
+&nbsp;&nbsp;-r,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remove the container<br>
+&nbsp;&nbsp;-i,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remove the container image<br>
+&nbsp;&nbsp;-s,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Restart the container after execution<br>
