@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "Creating Hello-World container"
+echo "Container name: helloworld"
+
+docker create \
+  --name=helloworld \
+  hello-world

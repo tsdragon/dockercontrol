@@ -1,0 +1,90 @@
+#!/bin/bash
+# Script to delete and recreate docker containers.  Use for updating or troubleshooting.
+
+# Command help
+print_help() {
+    echo "Usage: $0 [option...] -n <containername>" >&2
+    echo
+    echo "  -n name,  Specify container name (required)"
+    echo "  -x,       Stop the container"
+    echo "  -r,       Remove the container"
+    echo "  -i,       Remove the container image"
+    echo "  -s,       Restart the container after execution"
+    echo
+    exit 1
+}
+
+# Get current dir to complete path to container build scripts
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+
+# Reset in case getopts has been used previously in the shell.
+OPTIND=1
+
+# Initialize variables:
+CONTAINER_SCRIPTS_DIR=containers
+CONTAINER_SCRIPTS_PATH=$DIR/$CONTAINER_SCRIPTS_DIR
+STOP_CONTAINER=false
+RM_CONTAINER=false
+RM_CONTAINER_IMAGE=false
+RESTART_CONTAINER=false
+
+
+while getopts "n:xrish" opt; do
+    case "$opt" in
+      n)  CONTAINER_NAME=$OPTARG;;
+      x)  STOP_CONTAINER=true;;
+      r)  RM_CONTAINER=true;;
+      i)  RM_CONTAINER_IMAGE=true
+          IMAGE=$(docker ps -af "name=helloworld" | awk 'NR>1 {print $2}');; #Get container image id
+      s)  RESTART_CONTAINER=true;;
+      h)  print_help;;
+      *)  print_help;;
+      \?) print_help;;
+    esac
+done
+
+if [ ! "$CONTAINER_NAME" ]
+then
+    echo "No container name set, container name must be set with -n <container name>"
+    echo
+    print_help
+fi
+
+# Stop container
+if [ "$STOP_CONTAINER" = true ] ; then
+  echo "Stopping container $CONTAINER_NAME"
+  docker stop $CONTAINER_NAME
+fi
+
+# Remove container
+if [ "$RM_CONTAINER" = true ] ; then
+  echo "Removing container $CONTAINER_NAME"
+  docker rm $CONTAINER_NAME
+fi
+
+# Remove container images
+if [ "$RM_CONTAINER_IMAGE" = true ] ; then
+  if [ -z "$IMAGE" ] ; then
+    echo "$CONTAINER_NAME container image not found, either it doesn't exist or must be removed manually. Continuing..."
+  else
+    echo "Removing $CONTAINER_NAME container image"
+    docker rmi $IMAGE
+  fi
+  unset IMAGE
+fi
+
+# Rebuild container
+source $CONTAINER_SCRIPTS_PATH/$CONTAINER_NAME
+
+# Restart container
+if [ "$RESTART_CONTAINER" = true ] ; then
+  echo "Restarting $CONTAINER_NAME"
+  docker start $CONTAINER_NAME
+fi
+
+unset STOP_CONTAINER
+unset RM_CONTAINER
+unset RM_CONTAINER_IMAGE
+unset RESTART_CONTAINER
+unset CONTAINER_NAME

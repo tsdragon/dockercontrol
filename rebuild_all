@@ -1,0 +1,101 @@
+#!/bin/bash
+# Script to delete and recreate all docker containers.  Use for updating or troubleshooting.
+
+# Command help
+print_help() {
+    echo "Usage: $0 [option...] -c <containername> -c <containername>... -e <containername> -e <containername>..." >&2
+    echo
+    echo "  -a,       Rebuild all containers (ignores -c options)"
+    echo "  -n,       Nuke, completely wipe ALL containers (USE EXTREME CAUTION), assumes -a"
+    echo "  -d,       Don't restart the containers"
+    echo "  -c name,  When -a not specified, give list of containers to rebuild"
+    echo "  -e name,  Don't restart this container like the others"
+    echo
+    exit 1
+}
+
+# Get current dir to complete path to container build scripts
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+
+# Initialize variables:
+CONTAINER_SCRIPTS_DIR=containers
+SEARCH_DIR=$DIR/$CONTAINER_SCRIPTS_DIR
+ALL_CONTAINERS=false
+NUKE=false
+RESTART_CONTAINERS=true
+
+# Reset in case getopts has been used previously in the shell.
+OPTIND=1
+
+while getopts "andc:e:h" opt; do
+    case $opt in
+        a)  ALL_CONTAINERS=true;;
+        n)  ALL_CONTAINERS=true
+            NUKE=true;;
+        d)  RESTART_CONTAINERS=false;;
+        c)  CONTAINERS+=("$OPTARG");;
+        e)  NO_RESTART+=("$OPTARG");;
+        h)  print_help;;
+        *)  print_help;;
+        \?) print_help;;
+    esac
+done
+
+# Make sure some container names were set
+if [ ! "$ALL_CONTAINERS" ] && [ -z "$CONTAINERS" ]
+then
+    echo "No containers set, must select -a or container names must be set manually with -c <container name>"
+    print_help
+fi
+
+# First, delete the relevant containers
+if [ "$ALL_CONTAINERS" = true ] ; then
+
+  # Get container names from the containers folder
+  for filename in "$SEARCH_DIR"/*; do
+      filename=$(basename $filename)
+      CONTAINERS+=("$filename")
+  done
+  
+  if [ "$NUKE" = true ] ; then
+    read -p "Are you sure you want to nuke? This will remove ALL docker containers and images on this host! (Y/n)" -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+      exit 1
+    else
+      # Stop all running containers
+      docker stop $(docker ps -aq)
+
+      # Remove all containers
+      docker rm $(docker ps -aq)
+
+      # Remove all container images
+      docker rmi $(docker images -q)
+
+      # Rebuild the containers
+      for container_name in "${CONTAINERS[@]}"; do
+        source $DIR/rebuild_container -n $container_name
+      done
+    fi
+  fi
+fi
+
+# Remove and rebuild all the containers stored in CONTAINERS
+# unless already done in the nuke operation
+if [ "$NUKE" = false ] ; then
+  for container_name in "${CONTAINERS[@]}"; do
+    source $DIR/rebuild_container -xri -n $container_name
+  done
+fi
+
+# Restart all containers except those specified by -e,
+# unless -d is specifide in which case dont restart any.
+if [ "$RESTART_CONTAINERS" = true ] ; then
+  for container_name in "${CONTAINERS[@]}"; do
+    if [[ " ${NO_RESTART[*]} " != *" $container_name "* ]]; then
+      echo "docker start $container_name"
+    fi
+  done
+fi
