@@ -35,7 +35,7 @@ while getopts "n:xrish" opt; do
       n)  CONTAINER_NAME=$OPTARG;;
       x)  STOP_CONTAINER=true;;
       r)  RM_CONTAINER=true;;
-      i)  RM_CONTAINER_IMAGE=true
+      i)  RM_CONTAINER_IMAGE=true;;
       s)  RESTART_CONTAINER=true;;
       h)  print_help;;
       *)  print_help;;
@@ -50,7 +50,7 @@ if [ ! "$CONTAINER_NAME" ] ; then
 fi
 
 if [ "$RM_CONTAINER_IMAGE" = true ] ; then
-  IMAGE=$(docker ps -af "name=$CONTAINER_NAME" | awk 'NR>1 {print $2}');; #Get container image id
+  IMAGE=$(docker ps -af "name=$CONTAINER_NAME" | awk 'NR>1 {print $2}') #Get container image id
 fi
 
 # Stop container
