@@ -95,7 +95,7 @@ fi
 if [ "$RESTART_CONTAINERS" = true ] ; then
   for container_name in "${CONTAINERS[@]}"; do
     if [[ " ${NO_RESTART[*]} " != *" $container_name "* ]]; then
-      echo "docker start $container_name"
+      docker start $container_name
     fi
   done
 fi
