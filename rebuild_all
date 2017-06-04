@@ -21,20 +21,19 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 # Initialize variables:
 CONTAINER_SCRIPTS_DIR=containers
 SEARCH_DIR=$DIR/$CONTAINER_SCRIPTS_DIR
-ALL_CONTAINERS=false
+ALL_CONTAINERS=true
 NUKE=false
 RESTART_CONTAINERS=true
 
 # Reset in case getopts has been used previously in the shell.
 OPTIND=1
 
-while getopts "andc:e:h" opt; do
+while getopts "ndc:e:h" opt; do
     case $opt in
-        a)  ALL_CONTAINERS=true;;
-        n)  ALL_CONTAINERS=true
-            NUKE=true;;
+        n)  NUKE=true;;
         d)  RESTART_CONTAINERS=false;;
-        c)  CONTAINERS+=("$OPTARG");;
+        c)  CONTAINERS+=("$OPTARG")
+            ALL_CONTAINERS=false;; 
         e)  NO_RESTART+=("$OPTARG");;
         h)  print_help;;
         *)  print_help;;
@@ -42,14 +41,7 @@ while getopts "andc:e:h" opt; do
     esac
 done
 
-# Make sure some container names were set
-if [ ! "$ALL_CONTAINERS" ] && [ -z "$CONTAINERS" ]
-then
-    echo "No containers set, must select -a or container names must be set manually with -c <container name>"
-    print_help
-fi
-
-# First, delete the relevant containers
+# First, check if all is true, if so, find the relevant containers and check for nuke.
 if [ "$ALL_CONTAINERS" = true ] ; then
 
   # Get container names from the containers folder
