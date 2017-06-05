@@ -84,9 +84,3 @@ if [ "$RESTART_CONTAINER" = true ] ; then
   echo "Restarting $CONTAINER_NAME"
   docker start $CONTAINER_NAME
 fi
-
-unset STOP_CONTAINER
-unset RM_CONTAINER
-unset RM_CONTAINER_IMAGE
-unset RESTART_CONTAINER
-unset CONTAINER_NAME
