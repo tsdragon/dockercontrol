@@ -5,10 +5,9 @@
 print_help() {
     echo "Usage: $0 [option...] -c <containername> -c <containername>... -e <containername> -e <containername>..." >&2
     echo
-    echo "  -a,       Rebuild all containers (ignores -c options)"
     echo "  -n,       Nuke, completely wipe ALL containers (USE EXTREME CAUTION), assumes -a"
     echo "  -d,       Don't restart the containers"
-    echo "  -c name,  When -a not specified, give list of containers to rebuild"
+    echo "  -c name,  Manually give list of containers to rebuild instead of rebuilding all of them"
     echo "  -e name,  Don't restart this container like the others"
     echo
     exit 1
