@@ -12,7 +12,7 @@ It will also restart the containers once they're rebuilt automatically, inless y
 
 Usage: rebuild_all [option...] -c containername -c containername... -e containername -e containername... 
 
-&nbsp;&nbsp;-n,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nuke, completely wipe ALL containers (USE EXTREME CAUTION), assumes -a<br>
+&nbsp;&nbsp;-n,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nuke, completely wipe ALL containers (USE EXTREME CAUTION)<br>
 &nbsp;&nbsp;-d,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Don't restart the containers<br>
 &nbsp;&nbsp;-c name,&nbsp;&nbsp;Manually give list of containers to rebuild instead of rebuilding all of them<br>
 &nbsp;&nbsp;-e name,&nbsp;&nbsp;Don't restart this container like the others<br>
