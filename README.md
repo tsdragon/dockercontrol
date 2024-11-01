@@ -1,3 +1,5 @@
+# I'm archiving this as basically everything in here has been superceded by docker compose.
+
 # dockercontrol
 
 This is just a simple set of scripts to help me update/manage/rebuild the docker images on my server
